@@ -1,0 +1,30 @@
+[
+  {
+    "name": "user",
+    "type": "POST",
+    "endpoint": "/users",
+    "body": {
+      "request_id": "{uuid}",
+      "user": {
+        "id": "{uuid}"
+      }
+    }
+  },
+  {
+    "name": "user_group",
+    "type": "POST",
+    "endpoint": "/user_group",
+    "body": {
+      "request_id": "{uuid}",
+      "account": {
+        "id": "{uuid}",
+        "name": "some name",
+        "users": [
+          "{user}",
+          "{user}",
+          "{user}"
+        ]
+      }
+    }
+  }
+]
