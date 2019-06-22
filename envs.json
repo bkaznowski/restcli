@@ -1,7 +1,7 @@
 [
   {
     "names": ["default", "local", "l"],
-    "base_url": "localhost"
+    "base_url": "http://localhost"
   },
   {
     "names": ["dev", "d"],

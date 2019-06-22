@@ -26,7 +26,6 @@ class Cli(object):
         }
         response = requests.post(url, data=json.dumps(req['body']), headers=headers)
         response_json = response.json()
-        print('Making request', req)
         if 'id' not in response_json:
             raise Exception(
                 f'Response has no ID.\n'
@@ -126,4 +125,4 @@ if __name__ == '__main__':
             required=True
         )
     args = parser.parse_args()
-    print(cli.make_call(args.request, args.env))
+    print(cli.make_call(args.request, args.env or 'default'))
