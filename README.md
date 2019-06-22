@@ -68,6 +68,7 @@ The requests file requires that objects have fields called:
 | `type`        | yes      | The HTTP request type. Supported types are: `POST`, `GET` |
 | `endpoint`    | yes      | The endpoint                                              |
 | `body`        | yes      | the body of the request                                   |
+
 You can provide dynamic fields by using `{name[some_field]}`. `{uuid}` will generate a random uuid. Anything else will try and make a call and use the `id` field in the response. These dynamic fields can be used in any of the objects parameters (body/endpoint).
 
 Example:
