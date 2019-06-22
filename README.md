@@ -69,7 +69,7 @@ The requests file requires that objects have fields called:
 | `endpoint`    | yes      | The endpoint                                              |
 | `body`        | yes      | the body of the request                                   |
 
-You can provide dynamic fields by using `{name[some_field]}`. `{uuid}` will generate a random uuid. Anything else will try and make a call and use the `id` field in the response. These dynamic fields can be used in any of the objects parameters (body/endpoint).
+You can provide dynamic fields by using `{name[some_field]}`. `{uuid}` will generate a random uuid. Anything else surrounded with `{}` will make a call and resolve the fields. These dynamic fields can be used in any of the objects parameters (body/endpoint).
 
 Example:
 ```json
