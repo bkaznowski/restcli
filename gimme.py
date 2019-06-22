@@ -19,29 +19,30 @@ class Cli(object):
             raise Exception(f'Could not find {request_name} in available requests.')
         if env_name not in self.environments:
             raise Exception(f'Could not find {env_name} in available environments.')
+
         req = self._parse_request(self.requests[request_name], env_name)
-        url = f"{self.environments[env_name]}{req['endpoint']}"
-        headers = {
-            'content-type': 'application/json',
-        }
-        response = requests.post(url, data=json.dumps(req['body']), headers=headers)
+        url = f"{self.environments[env_name]['base_url']}{req['endpoint']}"
+        headers = {'content-type': 'application/json'}
+        if 'headers' in self.environments[env_name]:
+            headers = {**headers, **self.environments[env_name]['headers']}
+
+        if req['type'] == 'POST':
+            response = requests.post(url, data=json.dumps(req['body']), headers=headers)
+        elif req['type'] == 'GET':
+            response = requests.get(url, params=req['body'], headers=headers)
+        else:
+            raise Exception(f'Unknown HTTP method {req["type"]}')
+        response.raise_for_status()
         response_json = response.json()
-        if 'id' not in response_json:
-            raise Exception(
-                f'Response has no ID.\n'
-                f'Response: {response_json}\n'
-                f'Base URL: {self.environments[env_name]}\n'
-                f'Parsed request: {req}'
-            )
         return response_json
 
     def _parse_request(self, request, base_url):
         if isinstance(request, str):
             parameters = [parameter for _, parameter, _, _ in Formatter().parse(request) if parameter]
             values = {}
-            if parameters:
-                for parameter in parameters:
-                    values[parameter] = self._populate_parameter(parameter, base_url)
+            for parameter in parameters:
+                new_request = parameter.split('[')[0]
+                values[new_request] = self._populate_parameter(new_request, base_url)
             return request.format(**values)
         if isinstance(request, list):
             parsed = []
@@ -57,7 +58,7 @@ class Cli(object):
         if parameter_name == 'uuid':
             return str(uuid.uuid4())
         else:
-            return self.make_call(parameter_name, base_url)['id']
+            return self.make_call(parameter_name, base_url)
 
     def _load_requests(self, filename):
         with open(filename) as json_file:
@@ -72,7 +73,7 @@ class Cli(object):
             for d in data:
                 self._validate_environment_object(d)
                 for name in d['names']:
-                    self.environments[name] = d['base_url']
+                    self.environments[name] = d
 
     @staticmethod
     def _validate_request_object(d):
@@ -95,15 +96,30 @@ class Cli(object):
     def is_default_env_set(self):
         return 'default' in self.environments
 
+    def print_request_list(self):
+        for r in self.requests.values():
+            print(f'Name: {r["name"]}')
+            if 'description' in r:
+                print(f'Description: {r["description"]}')
+            print('-' * 20)
+
 
 if __name__ == '__main__':
     cli = Cli()
 
-    parser = argparse.ArgumentParser(description='Create objects in Vault.')
+    parser = argparse.ArgumentParser(description='Create objects in a rest API.')
     parser.add_argument(
         'request',
         metavar='request_name',
         help='the name of a request to make',
+        nargs='?'
+    )
+
+    parser.add_argument(
+        '-l',
+        '--list',
+        help='list all objects and exit',
+        action='store_true'
     )
 
     if cli.is_default_env_set():
@@ -112,7 +128,7 @@ if __name__ == '__main__':
             '--env',
             '--environment',
             metavar='env_name',
-            help='the name of a request to make',
+            help='the name environment to use',
         )
     else:
         required_named_args_parser = parser.add_argument_group('required named arguments')
@@ -121,8 +137,13 @@ if __name__ == '__main__':
             '--env',
             '--environment',
             metavar='env_name',
-            help='the name of a request to make. This can be made optional by naming an env as default',
+            help='the name environment to use. This can be made optional by naming an env as default',
             required=True
         )
     args = parser.parse_args()
-    print(cli.make_call(args.request, args.env or 'default'))
+    if args.list:
+        cli.print_request_list()
+    elif args.request:
+        print(cli.make_call(args.request, args.env or 'default'))
+    else:
+        print('Type -h for help')

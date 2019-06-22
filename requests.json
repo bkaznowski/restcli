@@ -1,17 +1,20 @@
 [
   {
     "name": "user",
+    "description":  "Creates a user",
     "type": "POST",
     "endpoint": "/users",
     "body": {
       "request_id": "{uuid}",
       "user": {
-        "id": "{uuid}"
+        "id": "{uuid}",
+        "name": "A user"
       }
     }
   },
   {
     "name": "user_group",
+    "description":  "Creates a user group",
     "type": "POST",
     "endpoint": "/user_group",
     "body": {
@@ -20,9 +23,9 @@
         "id": "{uuid}",
         "name": "some name",
         "users": [
-          "{user}",
-          "{user}",
-          "{user}"
+          "{user[id]}",
+          "{user[id]}",
+          "{user[id]}"
         ]
       }
     }

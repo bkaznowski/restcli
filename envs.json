@@ -5,14 +5,27 @@
   },
   {
     "names": ["dev", "d"],
-    "base_url": "http://dev.somedomain.com"
+    "base_url": "http://dev.somedomain.com",
+    "headers": {
+      "Api_Key": "some api key",
+      "Authorization": "Basic abc123="
+    }
+
   },
   {
     "names": ["staging", "s"],
-    "base_url": "http://staging.somedomain.com"
+    "base_url": "http://staging.somedomain.com",
+    "headers": {
+      "Api_Key": "some api key",
+      "Authorization": "Basic abc123="
+    }
   },
   {
     "names": ["prod"],
-    "base_url": "http://prod.somedomain.com"
+    "base_url": "http://prod.somedomain.com",
+    "headers": {
+      "Api_Key": "some api key",
+      "Authorization": "Basic abc123="
+    }
   }
 ]
