@@ -16,6 +16,7 @@ optional arguments:
 
 ## Environment file
 There are two fields that are required:
+
 | name of field | required | description                                                                                             |
 |---------------|----------|---------------------------------------------------------------------------------------------------------|
 | `names`       | yes      | Used to specify which base URL to use. `default` can be provided to make an environment the default one |
