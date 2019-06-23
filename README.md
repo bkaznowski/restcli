@@ -94,7 +94,7 @@ Example:
     "endpoint": "/user_group",
     "body": {
       "request_id": "{uuid}",
-      "account": {
+      "user_group": {
         "id": "{uuid}",
         "name": "some name",
         "users": [
