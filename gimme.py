@@ -35,7 +35,7 @@ class Cli(object):
 
         if parsed_req['type'] == 'POST':
             response = requests.post(url, data=json.dumps(parsed_req['body']), headers=headers)
-        if parsed_req['type'] == 'PUT':
+        elif parsed_req['type'] == 'PUT':
             response = requests.put(url, data=json.dumps(parsed_req['body']), headers=headers)
         elif parsed_req['type'] == 'GET':
             response = requests.get(url, params=parsed_req['body'], headers=headers)
